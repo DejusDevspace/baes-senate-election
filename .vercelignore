@@ -1,0 +1,26 @@
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Ignore IDE configurations
+.idea/
+.vscode/
+
+# Ignore local virtual environments
+.venv/
+env/
+venv/
+
+# Ignore test directories
+tests/
+
+# Ignore configuration files for local development
+*.env
+*.local
+
+# Ignore Vercel build logs (optional)
+.vercel/
+
+# Ignore any other unnecessary files
+*.log
+
