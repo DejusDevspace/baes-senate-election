@@ -1,0 +1,15 @@
+.form-auto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+}
+
+.flash {
+    color: #ee6f57;
+    text-align: center;
+  }
+
+.border-top {
+    padding-top: 15px;
+}

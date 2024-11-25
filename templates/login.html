@@ -1,0 +1,14 @@
+{% from "bootstrap5/form.html" import render_form %} {% block content %} {%
+include "header.html" %}
+
+<main class="form-auto">
+  {% with messages = get_flashed_messages() %} {% if messages %} {% for message
+  in messages %}
+  <li class="flash">{{ message }}</li>
+  {% endfor %} {% endif %} {% endwith %}
+  <form>
+    {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+  </form>
+</main>
+
+{% include "footer.html" %} {% endblock %}
