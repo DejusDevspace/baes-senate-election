@@ -15,11 +15,11 @@ load_dotenv()
 
 # Initialize flask app
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 # Bootstrap configuration
 Bootstrap5(app)
@@ -87,13 +87,15 @@ def load_database(sheet: BytesIO) -> None:
     # TODO: Receive excel file containing data
     # TODO: Hash and salt pin of registering users before passing into db
     # TODO: Save data into the db
-
     pass
 
 
 @app.route("/", methods=["GET"])
 def home():
-    return render_template("index.html")
+    response = db.session.execute((db.Select(Student)))
+    students = response.scalars().all()
+    # print(students[0].pin)
+    return render_template("index.html", logged_in=current_user.is_authenticated)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -105,19 +107,24 @@ def login():
         # print(matric_no, pin)
 
         student = db.session.execute(db.Select(Student).where(Student.matric_no == matric_no)).scalar()
-        
+        print(type(pin), type(student.pin))
         # Check if the student is registered in the db
         if not student:
             flash("Matric no. '{}' not registered!".format(matric_no))
             return redirect(url_for("login"))
         # Check if the pin entered by the student is correct
-        elif not check_password_hash(student.pin, pin):
+        elif not pin == student.pin:
+            print(student.pin, pin)
             flash("Incorrect pin! Please try again.")
             return redirect(url_for("login"))
         else:
             # If the details are correct, log the user in
+            print(pin, student.pin)
+            # print("Before:", current_user.is_authenticated)
             login_user(student)
-            return redirect(url_for("vote"))
+            flash("Logged in successfully!")
+            # print("After:", current_user.is_authenticated)
+            return redirect(url_for("home"))
     return render_template("login.html", form=form, logged_in=current_user.is_authenticated)
 
 @app.route("/vote", methods=["GET", "POST"])
@@ -132,6 +139,7 @@ def vote():
 def logout():
     # Log the current user out
     logout_user()
+    print(current_user.is_authenticated)
     return redirect(url_for("home"))
 
 

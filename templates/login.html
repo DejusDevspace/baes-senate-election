@@ -6,7 +6,7 @@ include "header.html" %}
   in messages %}
   <li class="flash">{{ message }}</li>
   {% endfor %} {% endif %} {% endwith %}
-  <form>
+  <form method="POST">
     {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
   </form>
 </main>
