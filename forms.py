@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 # WTForm for logging in existing users
 class LoginForm(FlaskForm):
-    matric_no = StringField("Matric Number", validators=[DataRequired()])
+    matric_no = StringField("Matric No.", validators=[DataRequired()])
     pin = PasswordField("Pin", validators=[DataRequired()])
     submit = SubmitField("Let Me In!")
     

@@ -31,7 +31,10 @@ login_manager.init_app(app)
 # Get logged in user (current user)
 @login_manager.user_loader
 def load_user(student_id):
-    return db.get_or_404(Student, student_id)
+    user = db.get_or_404(Student, student_id)
+    if user:
+        return User(user.id, user.level, user.matric_no, user.surname, user.pin)
+    return None
 
 # Class for db
 class Base(DeclarativeBase):
@@ -78,7 +81,14 @@ class Vote(db.Model):
     student = relationship("Student", back_populates="votes")
     candidate = relationship("Candidate", back_populates="votes")
 
-
+# Object for logged_in user
+class User(UserMixin):
+    def __init__(self, id, level, matric_no, surname, pin):
+        self.id = id
+        self.level = level
+        self.matric_no = matric_no
+        self.surname = surname
+        self.pin = pin
 # with app.app_context():
 #     db.create_all()
 
@@ -92,48 +102,59 @@ def load_database(sheet: BytesIO) -> None:
 
 @app.route("/", methods=["GET"])
 def home():
-    response = db.session.execute((db.Select(Student)))
-    students = response.scalars().all()
+    # response = db.session.execute((db.Select(Student)))
+    # students = response.scalars().all()
     # print(students[0].pin)
     return render_template("index.html", logged_in=current_user.is_authenticated)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        matric_no = form.matric_no.data
-        pin = form.pin.data
-        
-        # print(matric_no, pin)
+    if not current_user.is_authenticated:
+        if form.validate_on_submit():
+            matric_no = form.matric_no.data
+            pin = form.pin.data
 
-        student = db.session.execute(db.Select(Student).where(Student.matric_no == matric_no)).scalar()
-        print(type(pin), type(student.pin))
-        # Check if the student is registered in the db
-        if not student:
-            flash("Matric no. '{}' not registered!".format(matric_no))
-            return redirect(url_for("login"))
-        # Check if the pin entered by the student is correct
-        elif not pin == student.pin:
-            print(student.pin, pin)
-            flash("Incorrect pin! Please try again.")
-            return redirect(url_for("login"))
-        else:
-            # If the details are correct, log the user in
-            print(pin, student.pin)
-            # print("Before:", current_user.is_authenticated)
-            login_user(student)
-            flash("Logged in successfully!")
-            # print("After:", current_user.is_authenticated)
-            return redirect(url_for("home"))
+            # print(matric_no, pin)
+
+            student = db.session.execute(db.Select(Student).where(Student.matric_no == matric_no)).scalar()
+            # print(type(pin), type(student.pin))
+            # Check if the student is registered in the db
+            if not student:
+                flash("Matric no. '{}' not registered!".format(matric_no))
+                return redirect(url_for("login"))
+            # Check if the pin entered by the student is correct
+            elif not pin == student.pin:
+                # print(student.pin, pin)
+                flash("Incorrect pin! Please try again.")
+                return redirect(url_for("login"))
+            else:
+                # If the details are correct, log the user in
+                # print(pin, student.pin)
+                # print("Before:", current_user.is_authenticated)
+                login_user(student)
+                flash("Logged in successfully!")
+                # print("After:", current_user.is_authenticated)
+                return redirect(url_for("vote"))
+    else:
+        return redirect(url_for("vote"))
     return render_template("login.html", form=form, logged_in=current_user.is_authenticated)
 
 @app.route("/vote", methods=["GET", "POST"])
 @login_required
 def vote():
-    # TODO: Different voting forms for different levels? or custom forms per level
+    form = VoteForm()
+    user = {
+        "id": current_user.id,
+        "level": current_user.level,
+        "surname": current_user.surname,
+        "matric_no": current_user.matric_no,
+    }
+    # Display candidates from the db
+
     # TODO: Or current user's level determines the form from the backend login here!
     # TODO: Same for, conditionally send the candidates to populate the form based on criteria (level/dept)
-    pass
+    return render_template("vote.html", form=form, user=user, logged_in=current_user.is_authenticated)
 
 @app.route("/logout", methods=["GET"])
 def logout():
