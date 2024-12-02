@@ -1,2 +1,23 @@
-{% block content %} {% include "header.html" %} {% include "footer.html" %} {%
-endblock %}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+
+<div class="container mt-5">
+  <div class="row align-items-center">
+    <!-- Left Text Section -->
+    <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0 hero-text">
+      <h1 class="fw-bold display-4">BAES<br />Senate Election</h1>
+      <p class="lead mb-4">Choose your next senate representatives!</p>
+      <a href="/login" class="btn btn-primary btn-lg">Log In</a>
+    </div>
+    <!-- Right Image Section -->
+    <div class="col-lg-6 text-center">
+      <img
+        src="#"
+        alt="Senate Representatives"
+        class="img-fluid rounded border border-primary"
+      />
+    </div>
+  </div>
+</div>
+
+{% endblock %}

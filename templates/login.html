@@ -1,7 +1,10 @@
-{% from "bootstrap5/form.html" import render_form %} {% block content %} {%
-include "header.html" %}
-
+{% from "bootstrap5/form.html" import render_form %} {% extends "base.html" %}
+{% block title %}Login{% endblock %} {% block content %}
 <main class="form-auto">
+  <div class="mb-4 text-center">
+    <h2>Log In</h2>
+    <p id="info-text">Enter the details you filled in the registration form</p>
+  </div>
   {% with messages = get_flashed_messages() %} {% if messages %} {% for message
   in messages %}
   <li class="flash">{{ message }}</li>
@@ -11,4 +14,4 @@ include "header.html" %}
   </form>
 </main>
 
-{% include "footer.html" %} {% endblock %}
+{% endblock %}

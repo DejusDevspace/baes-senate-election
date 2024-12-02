@@ -1,15 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
 .form-auto {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    min-height: calc(100vh - 129px);
+}
+
+main {
+    flex: 1;
 }
 
 .flash {
     color: #ee6f57;
     text-align: center;
-  }
+}
+
+.hero-text {
+    padding-top: 90px;
+}
 
 .border-top {
     padding-top: 15px;
+}
+
+.candidate-card {
+    text-align: center;
+  }
+  
+.candidate-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.candidate-card label {
+  font-weight: bold;
+  display: block;
+}
+
+footer {
+    background-color: #121010;
+    width: 100%;
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+i {
+    background-color: #ffffff;
+    color: #ffffff;
+}
+
+.text-body-secondary {
+    color: #ffffff !important;
+}
+
+.my-4 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.pb-3 {
+    padding-top: 0 !important;
+    padding-bottom:  0 !important;
+}
+
+#info-text {
+    font-size: 0.7rem;
+}
+
+.footer-line {
+    width: 50%; /* Adjust this to control the line's width */
+    height: 1px; /* Line thickness */
+    background-color: #ffffff; /* Line color */
+    margin: 0 auto; /* Center the line */
+    opacity: 0.6; /* Optional: Adjust transparency */
+}
+
+/* .social-links {
+    margin-bottom: 1rem;
+} */
+
+.copyright {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8; /* Optional: Adjust text visibility */
 }

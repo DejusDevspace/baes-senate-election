@@ -1,0 +1,116 @@
+{% from "bootstrap5/form.html" import render_form %} {% extends "base.html" %}
+{% block title %}Vote{% endblock %} {% block content %}
+
+<div class="container py-5">
+  <div class="container py-5">
+    <!-- Display User Info -->
+    <div class="mb-4 text-center">
+      <h4>Welcome, {{ user.surname }}</h4>
+    </div>
+    <h1 class="text-center mb-4">Senate Head</h1>
+    <form action="{{ url_for('vote') }}" method="post" id="voteForm">
+      <!-- For CSRF Token -->
+      {{ form.hidden_tag() }}
+      <!-- Candidates -->
+      <!-- for loop -->
+      <div class="row justify-content-center">
+        <!-- Candidate 1 -->
+        <div class="col-md-3 candidate-card">
+          <img src="https://via.placeholder.com/150" alt="Candidate 1" />
+          <label for="candidate1">Jamiu</label>
+          <p>MCT, 500 Level</p>
+          <input
+            type="radio"
+            name="candidate"
+            id="candidate1"
+            value="1"
+            onclick="toggleSelection(this)"
+          />
+        </div>
+
+        <!-- Candidate 2 -->
+        <div class="col-md-3 candidate-card">
+          <img src="https://via.placeholder.com/150" alt="Candidate 2" />
+          <label for="candidate2">John Doe</label>
+          <p>EEE, 500 Level</p>
+          <input
+            type="radio"
+            name="candidate"
+            id="candidate2"
+            value="2"
+            onclick="toggleSelection(this)"
+          />
+        </div>
+
+        <!-- Candidate 3 -->
+        <div class="col-md-3 candidate-card">
+          <img src="https://via.placeholder.com/150" alt="Candidate 3" />
+          <label for="candidate3">Deju</label>
+          <p>MCT, 500 Level</p>
+          <input
+            type="radio"
+            name="candidate"
+            id="candidate3"
+            value="3"
+            onclick="toggleSelection(this)"
+          />
+        </div>
+        <h1 class="text-center mb-4">Senate Head</h1>
+    <form action="{{ url_for('vote') }}" method="post" id="voteForm">
+      <!-- For CSRF Token -->
+      {{ form.hidden_tag() }}
+      <!-- Candidates -->
+      <!-- for loop -->
+      <div class="row justify-content-center">
+        <!-- Candidate 1 -->
+        <div class="col-md-3 candidate-card">
+          <img src="https://via.placeholder.com/150" alt="Candidate 1" />
+          <label for="candidate1">Jamiu</label>
+          <p>MCT, 500 Level</p>
+          <input
+            type="radio"
+            name="candidate"
+            id="candidate1"
+            value="1"
+            onclick="toggleSelection(this)"
+          />
+        </div>
+
+        <!-- Candidate 2 -->
+        <div class="col-md-3 candidate-card">
+          <img src="https://via.placeholder.com/150" alt="Candidate 2" />
+          <label for="candidate2">John Doe</label>
+          <p>EEE, 500 Level</p>
+          <input
+            type="radio"
+            name="candidate"
+            id="candidate2"
+            value="2"
+            onclick="toggleSelection(this)"
+          />
+        </div>
+
+        <!-- Candidate 3 -->
+        <div class="col-md-3 candidate-card">
+          <img src="https://via.placeholder.com/150" alt="Candidate 3" />
+          <label for="candidate3">Deju</label>
+          <p>MCT, 500 Level</p>
+          <input
+            type="radio"
+            name="candidate"
+            id="candidate3"
+            value="3"
+            onclick="toggleSelection(this)"
+          />
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary">Submit Votes</button>
+      </div>
+    </form>
+  </div>
+
+  {% endblock %}
+</div>
