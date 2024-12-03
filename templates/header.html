@@ -36,13 +36,20 @@
         </li>
         {% else %}
         <li class="nav-item">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('vote') }}"
+            >Vote</a
+          >
+        </li>
+        <li class="nav-item">
           <a
             class="nav-link px-lg-3 py-3 py-lg-4"
+            id="logout"
             href="{{ url_for('logout') }}"
-            >Log Out</a
-          >
-          {% endif %}
+            >Log Out<img
+              src="{{ url_for('static', filename='assets/img/logout.png') }}"
+          /></a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </div>
