@@ -7,110 +7,99 @@
     <div class="mb-4 text-center">
       <h4>Welcome, {{ user.surname }}</h4>
     </div>
-    <h1 class="text-center mb-4">Senate Head</h1>
     <form action="{{ url_for('vote') }}" method="post" id="voteForm">
       <!-- For CSRF Token -->
       {{ form.hidden_tag() }}
       <!-- Candidates -->
-      <!-- for loop -->
       <div class="row justify-content-center">
-        <!-- Candidate 1 -->
+        <!-- Head Candidates -->
+        <div class="mb-6 text-center" id="head">
+          <h5>Senate Head</h5>
+        </div>
+        {% for candidate in head_candidates %}
         <div class="col-md-3 candidate-card">
-          <img src="https://via.placeholder.com/150" alt="Candidate 1" />
-          <label for="candidate1">Jamiu</label>
-          <p>MCT, 500 Level</p>
+          <img src="#" alt="Candidate {{ candidate.id }}" />
+          <label>{{ candidate.name }}</label>
+          <p>
+            {{ "MCT" if candidate.department == "Mechatronics Engineering" else
+            "EEE" }}, {{ candidate.level }} Level
+          </p>
           <input
             type="radio"
-            name="candidate"
-            id="candidate1"
-            value="1"
+            name="head_candidate"
+            value="{{ candidate.id }}"
             onclick="toggleSelection(this)"
+            required
           />
         </div>
+        {% endfor %}
 
-        <!-- Candidate 2 -->
+        <!-- Chairman Candidates -->
+        <div class="mb-6 text-center" id="chairman">
+          <h5>Senate Chairman</h5>
+        </div>
+        {% for candidate in chairman_candidates %}
         <div class="col-md-3 candidate-card">
-          <img src="https://via.placeholder.com/150" alt="Candidate 2" />
-          <label for="candidate2">John Doe</label>
-          <p>EEE, 500 Level</p>
+          <img src="#" alt="Candidate {{ candidate.id }}" />
+          <label>{{ candidate.name }}</label>
+          <p>
+            {{ "MCT" if candidate.department == "Mechatronics Engineering" else
+            "EEE" }}, {{ candidate.level }} Level
+          </p>
           <input
             type="radio"
-            name="candidate"
-            id="candidate2"
-            value="2"
+            name="chairman_candidate"
+            value="{{ candidate.id }}"
             onclick="toggleSelection(this)"
+            required
           />
         </div>
+        {% endfor %}
 
-        <!-- Candidate 3 -->
-        <div class="col-md-3 candidate-card">
-          <img src="https://via.placeholder.com/150" alt="Candidate 3" />
-          <label for="candidate3">Deju</label>
-          <p>MCT, 500 Level</p>
-          <input
-            type="radio"
-            name="candidate"
-            id="candidate3"
-            value="3"
-            onclick="toggleSelection(this)"
-          />
+        <!-- Submit Button -->
+        <div class="text-center mt-4">
+          <button
+            type="button"
+            class="btn btn-primary mt-3"
+            id="submitVoteButton"
+          >
+            Submit Votes
+          </button>
         </div>
-        <h1 class="text-center mb-4">Senate Head</h1>
-    <form action="{{ url_for('vote') }}" method="post" id="voteForm">
-      <!-- For CSRF Token -->
-      {{ form.hidden_tag() }}
-      <!-- Candidates -->
-      <!-- for loop -->
-      <div class="row justify-content-center">
-        <!-- Candidate 1 -->
-        <div class="col-md-3 candidate-card">
-          <img src="https://via.placeholder.com/150" alt="Candidate 1" />
-          <label for="candidate1">Jamiu</label>
-          <p>MCT, 500 Level</p>
-          <input
-            type="radio"
-            name="candidate"
-            id="candidate1"
-            value="1"
-            onclick="toggleSelection(this)"
-          />
-        </div>
-
-        <!-- Candidate 2 -->
-        <div class="col-md-3 candidate-card">
-          <img src="https://via.placeholder.com/150" alt="Candidate 2" />
-          <label for="candidate2">John Doe</label>
-          <p>EEE, 500 Level</p>
-          <input
-            type="radio"
-            name="candidate"
-            id="candidate2"
-            value="2"
-            onclick="toggleSelection(this)"
-          />
-        </div>
-
-        <!-- Candidate 3 -->
-        <div class="col-md-3 candidate-card">
-          <img src="https://via.placeholder.com/150" alt="Candidate 3" />
-          <label for="candidate3">Deju</label>
-          <p>MCT, 500 Level</p>
-          <input
-            type="radio"
-            name="candidate"
-            id="candidate3"
-            value="3"
-            onclick="toggleSelection(this)"
-          />
-        </div>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary">Submit Votes</button>
       </div>
     </form>
   </div>
-
-  {% endblock %}
 </div>
+
+<!-- Confirmation Modal -->
+<div
+  class="modal fade"
+  id="confirmationModal"
+  tabindex="-1"
+  aria-labelledby="confirmationModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header justify-content-center">
+        <img
+          src="{{ url_for('static', filename='assets/img/clipboard.png') }}"
+          alt="Confirmation Icon"
+          style="width: 50px"
+        />
+      </div>
+      <div class="modal-body">
+        <h5>Are you sure you want to submit?</h5>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          No
+        </button>
+        <button type="button" id="confirmSubmit" class="btn btn-primary">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
