@@ -1,9 +1,9 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from flask_bootstrap import Bootstrap5
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy import Integer, String, ForeignKey, and_
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from io import BytesIO
@@ -33,7 +33,7 @@ login_manager.init_app(app)
 def load_user(student_id):
     user = db.get_or_404(Student, student_id)
     if user:
-        return User(user.id, user.level, user.matric_no, user.surname, user.pin)
+        return User(user.id, user.level, user.matric_no, user.department, user.surname, user.pin)
     return None
 
 # Class for db
@@ -51,9 +51,10 @@ class Student(UserMixin, db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     level: Mapped[int] = mapped_column(Integer, nullable=False)
     matric_no: Mapped[str] = mapped_column(String(11), unique=True, nullable=False)
+    department: Mapped[str] = mapped_column(String(50), nullable=False)
     surname: Mapped[str] = mapped_column(String(50), nullable=False)
     pin: Mapped[int] = mapped_column(Integer, nullable=False)
-     # Relationship with Votes
+    # Relationship with Votes
     votes = relationship("Vote", back_populates="student", cascade="all, delete-orphan")
 
 
@@ -63,6 +64,9 @@ class Candidate(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     position: Mapped[str] = mapped_column(String(255), nullable=False)
+    level: Mapped[str] = mapped_column(Integer, nullable=False)
+    department: Mapped[str] = mapped_column(String(50), nullable=False)
+    image: Mapped[str] = mapped_column(String(255), nullable=False)
     votes_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     # Relationship with Votes
     votes = relationship("Vote", back_populates="candidate", cascade="all, delete-orphan")
@@ -83,12 +87,14 @@ class Vote(db.Model):
 
 # Object for logged_in user
 class User(UserMixin):
-    def __init__(self, id, level, matric_no, surname, pin):
+    def __init__(self, id, level, matric_no, department, surname, pin):
         self.id = id
         self.level = level
         self.matric_no = matric_no
+        self.department = department
         self.surname = surname
         self.pin = pin
+
 # with app.app_context():
 #     db.create_all()
 
@@ -149,18 +155,91 @@ def vote():
         "level": current_user.level,
         "surname": current_user.surname,
         "matric_no": current_user.matric_no,
+        "department": current_user.department,
     }
-    # Display candidates from the db
 
-    # TODO: Or current user's level determines the form from the backend login here!
-    # TODO: Same for, conditionally send the candidates to populate the form based on criteria (level/dept)
-    return render_template("vote.html", form=form, user=user, logged_in=current_user.is_authenticated)
+    # Query candidates from the db
+    # Head Candidates
+    head_candidates = db.session.execute(
+        db.Select(Candidate).where(Candidate.position == "Head")
+    ).scalars().all()
+
+    # Chairman Candidates
+    chairman_candidates = db.session.execute(
+        db.Select(Candidate).where(
+            and_(
+                Candidate.position == "Chairman",
+                Candidate.department == user["department"],
+                Candidate.level == user["level"],
+            )
+        )
+    ).scalars().all()
+
+    # Form submission logic
+    if form.validate_on_submit():
+        # Get the responses from the form
+        head_vote = request.form.get("head_candidate")
+        chairman_vote = request.form.get("chairman_candidate")
+        print("Head choice:", head_vote)
+        print("Chairman choice:", chairman_vote)
+
+        if not head_vote or not chairman_vote:
+            flash("Please select a candidate in each category!", "warning")
+            return redirect(url_for("vote"))
+
+        # Save votes to database
+        try:
+            # Query the db for the selected head candidate
+            senate_head_cand = db.session.execute(
+                db.Select(Candidate).where(Candidate.id == head_vote)
+            ).scalar_one_or_none()
+            # Add the vote for the senate head
+            db.session.add(
+                Vote(
+                    voter=user["id"],
+                    candidate_id=head_vote
+                )
+            )
+            # Add one to the candidates number of votes
+            senate_head_cand.votes_count += 1
+
+            # Query the db for the selected chairman candidate
+            senate_chairman_cand = db.session.execute(
+                db.Select(Candidate).where(Candidate.id == chairman_vote)
+            ).scalar_one_or_none()
+            # Add the vote for the senate chairman
+            db.session.add(
+                Vote(
+                    voter=user["id"],
+                    candidate_id=chairman_vote
+                )
+            )
+            # Add one to the candidates number of votes
+            senate_chairman_cand.votes_count += 1
+
+            # Commit the transaction
+            db.session.commit()
+            logout_user()
+            return render_template("success.html")
+        except Exception as e:
+            db.session.rollback()
+            flash("An error occurred while submitting your votes. Please try again.", "danger")
+            print(e)
+            return redirect(url_for("vote"))
+
+    return render_template(
+        "vote.html",
+        form=form,
+        user=user,
+        logged_in=current_user.is_authenticated,
+        head_candidates=head_candidates,
+        chairman_candidates=chairman_candidates,
+    )
 
 @app.route("/logout", methods=["GET"])
 def logout():
     # Log the current user out
     logout_user()
-    print(current_user.is_authenticated)
     return redirect(url_for("home"))
 
 
