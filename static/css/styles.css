@@ -2,9 +2,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+}
 
-  html, body {
+html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -38,18 +38,31 @@ main {
 
 .candidate-card {
     text-align: center;
-  }
-  
+}
+
 .candidate-card img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
 }
 
 .candidate-card label {
-  font-weight: bold;
-  display: block;
+    font-weight: bold;
+    display: block;
+}
+
+.fullscreen-image {
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+}
+
+.image-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 footer {
@@ -94,6 +107,14 @@ i {
 /* .social-links {
     margin-bottom: 1rem;
 } */
+
+#logout {
+    color: #CD1818;
+}
+
+#head, #chairman {
+    margin: 18px 0;
+}
 
 .copyright {
     margin-top: 1rem;
