@@ -2,23 +2,26 @@
 {% block title %}Vote{% endblock %} {% block content %}
 
 <div class="container py-5">
+  <div class="mb-6 text-left" id="info-text">
+    <h5><em>Welcome, {{ user.surname }}</em></h5>
+  </div>
   <div class="container py-5">
     <!-- Display User Info -->
-    <div class="mb-4 text-center">
-      <h4>Welcome, {{ user.surname }}</h4>
-    </div>
     <form action="{{ url_for('vote') }}" method="post" id="voteForm">
       <!-- For CSRF Token -->
       {{ form.hidden_tag() }}
       <!-- Candidates -->
       <div class="row justify-content-center">
         <!-- Head Candidates -->
-        <div class="mb-6 text-center" id="head">
-          <h5>Senate Head</h5>
+        <div class="mb-4 text-center" id="head">
+          <h1><b>Senate Head</b></h1>
         </div>
         {% for candidate in head_candidates %}
         <div class="col-md-3 candidate-card">
-          <img src="#" alt="Candidate {{ candidate.id }}" />
+          <img
+            src="{{ url_for('static', filename=candidate.image) }}"
+            alt="Candidate {{ candidate.id }}"
+          />
           <label>{{ candidate.name }}</label>
           <p>
             {{ "MCT" if candidate.department == "Mechatronics Engineering" else
@@ -35,12 +38,15 @@
         {% endfor %}
 
         <!-- Chairman Candidates -->
-        <div class="mb-6 text-center" id="chairman">
-          <h5>Senate Chairman</h5>
+        <div class="mb-4 text-center" id="chairman">
+          <h1><b>Senate Chairman</b></h1>
         </div>
         {% for candidate in chairman_candidates %}
         <div class="col-md-3 candidate-card">
-          <img src="#" alt="Candidate {{ candidate.id }}" />
+          <img
+            src="{{ url_for('static', filename=candidate.image) }}"
+            alt="Candidate {{ candidate.id }}"
+          />
           <label>{{ candidate.name }}</label>
           <p>
             {{ "MCT" if candidate.department == "Mechatronics Engineering" else
