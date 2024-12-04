@@ -125,6 +125,7 @@ def login():
 
             student = db.session.execute(db.Select(Student).where(Student.matric_no == matric_no)).scalar()
             # print(type(pin), type(student.pin))
+            db.session.commit()
             # Check if the student is registered in the db
             if not student:
                 flash("Matric no. '{}' not registered!".format(matric_no))
