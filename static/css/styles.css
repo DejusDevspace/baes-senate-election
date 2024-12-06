@@ -36,6 +36,32 @@ main {
     padding-top: 15px;
 }
 
+.border-bottom {
+    padding-bottom: 15px;
+}
+
+.chart-container {
+    width: 80%;
+    margin: 30px auto;
+    min-height: 300px;
+}
+
+.container {
+    margin-bottom: 48px;
+    
+}
+
+#imageCarousel {
+    max-height: 700px; /* Adjust this value as needed */
+    overflow: hidden;
+}
+
+#imageCarousel img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
 .candidate-card {
     text-align: center;
 }
@@ -112,6 +138,15 @@ i {
     color: #CD1818;
 }
 
+#election {
+    font-family: 'Rosmatika', sans-serif;
+    font-weight: 400;
+}
+
+#election-info {
+    font-size: 1rem;
+}
+
 #intro {
     font-size: 1rem;
 }
@@ -125,3 +160,5 @@ i {
     font-size: 0.9rem;
     opacity: 0.8; /* Optional: Adjust text visibility */
 }
+
+/* Custom alert CSS */
