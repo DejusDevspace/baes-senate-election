@@ -1,23 +1,179 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-
+%} {% if not logged_in %}
 <div class="container mt-5">
   <div class="row align-items-center">
     <!-- Left Text Section -->
-    <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0 hero-text">
-      <h1 class="fw-bold display-4">BAES<br />Senate Election</h1>
-      <p class="lead mb-4">Choose your next senate representatives!</p>
+    <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+      <h1 class="fw-bold display-4" id="election">
+        <b>BAES<br />Senate Election</b>
+      </h1>
+      <p class="lead mb-4" id="election-info">
+        Choose your next senate representatives!
+      </p>
       <a href="/login" class="btn btn-primary btn-lg">Log In</a>
     </div>
-    <!-- Right Image Section -->
+    <!-- Right Image Slideshow Section -->
     <div class="col-lg-6 text-center">
-      <img
-        src="#"
-        alt="Senate Representatives"
-        class="img-fluid rounded border border-primary"
-      />
+      <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img
+              src="{{ url_for('static', filename='assets/img/candidates/image524.png') }}"
+              class="d-block w-100 img-fluid rounded border border-primary"
+              alt="First slide"
+            />
+          </div>
+          <div class="carousel-item">
+            <img
+              src="{{ url_for('static', filename='assets/img/candidates/image526.png') }}"
+              class="d-block w-100 img-fluid rounded border border-primary"
+              alt="Second slide"
+            />
+          </div>
+          <div class="carousel-item">
+            <img
+              src="{{ url_for('static', filename='assets/img/candidates/image525.png') }}"
+              class="d-block w-100 img-fluid rounded border border-primary"
+              alt="Third slide"
+            />
+          </div>
+        </div>
+        <!-- Carousel Controls -->
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#imageCarousel"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#imageCarousel"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-{% endblock %}
+{% else %}
+
+<div class="chart-container">
+  <canvas id="headChart"></canvas>
+</div>
+<div class="chart-container">
+  <canvas id="chairmanChart"></canvas>
+</div>
+
+<!-- ChartJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- ChartJS chart -->
+<script>
+  // Function to fetch poll data from the server
+  async function fetchPollData() {
+    try {
+      const response = await fetch("/poll-data");
+      if (!response.ok) {
+        throw new Error("Failed to fetch poll data");
+      }
+      const pollData = await response.json();
+      console.log(pollData);
+      return pollData;
+    } catch (error) {
+      console.error("Error fetching poll data:", error);
+    }
+  }
+
+  // Function to create the chart
+  async function createChart() {
+    const pollData = await fetchPollData();
+
+    if (!pollData || pollData.error) {
+      console.error("Poll data is unavailable or contains errors.");
+      return;
+    }
+
+    const headCandidates = pollData.head_candidates;
+    const chairmanCandidates = pollData.chairman_candidates;
+
+    // Extract labels and votes for the chart
+    const headLabels = headCandidates.map((candidate) => candidate.name);
+    const headVotes = headCandidates.map((candidate) => candidate.votes_count);
+
+    const chairmanLabels = chairmanCandidates.map(
+      (candidate) => candidate.name
+    );
+    const chairmanVotes = chairmanCandidates.map(
+      (candidate) => candidate.votes_count
+    );
+
+    // Create Chart.js chart for Head Candidates
+    const headCtx = document.getElementById("headChart").getContext("2d");
+    new Chart(headCtx, {
+      type: "bar",
+      data: {
+        labels: headLabels,
+        datasets: [
+          {
+            label: "Votes for Head Candidates",
+            data: headVotes,
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+        },
+        scales: {
+          y: { beginAtZero: true },
+        },
+        maintainAspectRatio: false,
+      },
+    });
+
+    // Create Chart.js chart for Chairman Candidates
+    const chairmanCtx = document
+      .getElementById("chairmanChart")
+      .getContext("2d");
+    new Chart(chairmanCtx, {
+      type: "bar",
+      data: {
+        labels: chairmanLabels,
+        datasets: [
+          {
+            label: "Votes for Chairman Candidates",
+            data: chairmanVotes,
+            backgroundColor: "rgba(153, 102, 255, 0.6)",
+            borderColor: "rgba(153, 102, 255, 1)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+        },
+        scales: {
+          y: { beginAtZero: true },
+        },
+        maintainAspectRatio: false,
+      },
+    });
+  }
+
+  // Call the function to create the chart
+  createChart();
+</script>
+
+{% endif %} {% endblock %}

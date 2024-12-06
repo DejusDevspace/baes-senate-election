@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request
+from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from io import BytesIO
 from dotenv import load_dotenv
+from typing import List, Any, Dict
 # Forms from forms.py
 from forms import LoginForm, VoteForm
 
@@ -105,13 +106,67 @@ def load_database(sheet: BytesIO) -> None:
     # TODO: Save data into the db
     pass
 
+def jsonify_data(data: List[Any]) -> List[Dict]:
+    json_data = []
+    try:
+        for val in data:
+            json_data.append(
+                {"name": val.name, "votes_count": val.votes_count}
+            )
+        return json_data
+    except Exception as e:
+        print("Error compiling data data:\n", e)
+
+def load_poll_data():
+    if current_user.is_authenticated:
+        try:
+            head_candidates = db.session.execute(
+                db.Select(Candidate).where(Candidate.position == "Head")
+            ).scalars().all()
+            chairman_candidates = db.session.execute(
+                db.Select(Candidate).where(
+                    and_(
+                        Candidate.position == "Chairman",
+                        Candidate.department == current_user.department,
+                        Candidate.level == current_user.level
+                    )
+                )
+            ).scalars().all()
+            head_candidates = jsonify_data(head_candidates)
+            chairman_candidates = jsonify_data(chairman_candidates)
+
+            # print(head_candidates, "\n", chairman_candidates)
+            return head_candidates, chairman_candidates
+        except Exception as e:
+            print(e)
+    else:
+        return None
+
 
 @app.route("/", methods=["GET"])
 def home():
-    # response = db.session.execute((db.Select(Student)))
-    # students = response.scalars().all()
-    # print(students[0].pin)
+    if current_user.is_authenticated:
+        head_candidates, chairman_candidates = load_poll_data()
+        render_template(
+            "index.html",
+            logged_in=current_user.is_authenticated,
+            head_candidates=head_candidates,
+            chairman_candidates=chairman_candidates
+        )
     return render_template("index.html", logged_in=current_user.is_authenticated)
+
+
+@app.route("/poll-data", methods=["GET"])
+def poll_data():
+    try:
+        head_candidates, chairman_candidates = load_poll_data()
+        return jsonify({
+            "head_candidates": head_candidates,
+            "chairman_candidates": chairman_candidates
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -140,7 +195,6 @@ def login():
                 # print(pin, student.pin)
                 # print("Before:", current_user.is_authenticated)
                 login_user(student)
-                flash("Logged in successfully!")
                 # print("After:", current_user.is_authenticated)
                 return redirect(url_for("vote"))
     else:
@@ -158,6 +212,16 @@ def vote():
         "matric_no": current_user.matric_no,
         "department": current_user.department,
     }
+    # Query the db to find out if the user has voted
+    try:
+        voted = db.session.execute(
+            db.Select(Vote).where(Vote.voter == user["id"] )
+        ).scalars().all()
+        print(voted)
+        if voted:
+            return render_template("voted.html", logged_in=current_user.is_authenticated)
+    except Exception as e:
+        print("Error loading user's vote", e)
 
     # Query candidates from the db
     # Head Candidates
@@ -184,6 +248,7 @@ def vote():
         print("Head choice:", head_vote)
         print("Chairman choice:", chairman_vote)
 
+        # Verify that user has voted in each category
         if not head_vote or not chairman_vote:
             flash("Please select a candidate in each category!", "warning")
             return redirect(url_for("vote"))
@@ -220,8 +285,7 @@ def vote():
 
             # Commit the transaction
             db.session.commit()
-            logout_user()
-            return render_template("success.html")
+            return render_template("success.html", logged_in=current_user.is_authenticated)
         except Exception as e:
             db.session.rollback()
             flash("An error occurred while submitting your votes. Please try again.", "danger")

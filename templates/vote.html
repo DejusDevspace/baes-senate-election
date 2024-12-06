@@ -28,12 +28,13 @@
             "EEE" }}, {{ candidate.level }} Level
           </p>
           <input
-            type="radio"
+            type="checkbox"
             name="head_candidate"
             value="{{ candidate.id }}"
-            onclick="toggleSelection(this)"
+            onclick="toggleSelection(this, 'head_candidate')"
             required
           />
+          <p>Vote</p>
         </div>
         {% endfor %}
 
@@ -53,12 +54,13 @@
             "EEE" }}, {{ candidate.level }} Level
           </p>
           <input
-            type="radio"
+            type="checkbox"
             name="chairman_candidate"
             value="{{ candidate.id }}"
-            onclick="toggleSelection(this)"
+            onclick="toggleSelection(this, 'chairman_candidate')"
             required
           />
+          <p>Vote</p>
         </div>
         {% endfor %}
 
