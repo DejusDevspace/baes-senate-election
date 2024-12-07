@@ -4,9 +4,15 @@
 <div class="image-container">
   <img
     src="{{ url_for('static', filename='assets/img/voted.png') }}"
-    alt="thanks-for-voting"
+    alt="response-recorded"
     class="fullscreen-image"
   />
+  <div class="mb-4 text-center">
+    <p>
+      Your response has been recorded! You can view the
+      <a href="{{ url_for('home') }}">Live Poll</a> while the election concludes
+    </p>
+  </div>
 </div>
 
 {% endblock %}
