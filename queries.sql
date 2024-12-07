@@ -49,5 +49,6 @@ VALUES
 ('Jane Glory', 'Head', 400, 'Electrical and Electronics Engineering', 'assets/img/candidates/image526.png'),
 ('Mark Doe', 'Chairman', 500, 'Electrical and Electronics Engineering', 'assets/img/candidates/image525.png'),
 ('Paul Doe', 'Head', 400, 'Mechatronics Engineering', 'assets/img/candidates/image524.png'),
+('Jake Paul', 'Head', 500, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png'),
 ('Dave Davis', 'Secretary', 400, 'Electrical and Electronics Engineering', 'assets/img/candidates/image525.png'),
 ('Debby Daniels', 'Secretary', 400, 'Mechatronics Engineering', 'assets/img/candidates/image526.png')
