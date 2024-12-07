@@ -48,4 +48,5 @@ VALUES
 ('Invalid Dan', 'Chairman', 300, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png'),
 ('Jane Glory', 'Chairman', 400, 'Electrical and Electronics Engineering', 'assets/img/candidates/image526.png'),
 ('Mark Doe', 'Head', 500, 'Electrical and Electronics Engineering', 'assets/img/candidates/image525.png'),
-('Paul Doe', 'Chairman', 400, 'Mechatronics Engineering', 'assets/img/candidates/image524.png');
+('Paul Doe', 'Chairman', 400, 'Mechatronics Engineering', 'assets/img/candidates/image524.png'),
+('John Doe', 'Chairman', 200, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png');
