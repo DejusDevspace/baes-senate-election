@@ -16,7 +16,7 @@
         <div class="mb-4 text-center" id="head">
           <h1><b>Senate Chairman</b></h1>
         </div>
-        {% for candidate in head_candidates %}
+        {% for candidate in chairman_candidates %}
         <div class="col-md-3 candidate-card">
           <img
             src="{{ url_for('static', filename=candidate.image) }}"
@@ -68,7 +68,7 @@
         <div class="mb-4 text-center" id="chairman">
           <h1><b>Senate Head</b></h1>
         </div>
-        {% for candidate in chairman_candidates %}
+        {% for candidate in head_candidates %}
         <div class="col-md-3 candidate-card">
           <img
             src="{{ url_for('static', filename=candidate.image) }}"

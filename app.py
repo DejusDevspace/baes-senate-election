@@ -120,13 +120,13 @@ def jsonify_data(data: List[Any]) -> List[Dict]:
 def load_poll_data():
     if current_user.is_authenticated:
         try:
-            head_candidates = db.session.execute(
-                db.Select(Candidate).where(Candidate.position == "Head")
-            ).scalars().all()
             chairman_candidates = db.session.execute(
+                db.Select(Candidate).where(Candidate.position == "Chairman")
+            ).scalars().all()
+            head_candidates = db.session.execute(
                 db.Select(Candidate).where(
                     and_(
-                        Candidate.position == "Chairman",
+                        Candidate.position == "Head",
                         Candidate.department == current_user.department,
                         Candidate.level == current_user.level
                     )
@@ -231,7 +231,7 @@ def vote():
 
     # Query candidates from the db
     # Head Candidates
-    head_candidates = db.session.execute(
+    chairman_candidates = db.session.execute(
         db.Select(Candidate).where(Candidate.position == "Chairman")
     ).scalars().all()
 
@@ -241,7 +241,7 @@ def vote():
     ).scalars().all()
 
     # Chairman Candidates
-    chairman_candidates = db.session.execute(
+    head_candidates = db.session.execute(
         db.Select(Candidate).where(
             and_(
                 Candidate.position == "Head",
@@ -256,8 +256,10 @@ def vote():
         # Get the responses from the form
         head_vote = request.form.get("head_candidate")
         chairman_vote = request.form.get("chairman_candidate")
+        secretary_vote = request.form.get("secretary_candidate")
         # print("Head choice:", head_vote)
         # print("Chairman choice:", chairman_vote)
+        # print("Secretary choice", secretary_vote)
 
         # Verify that user has voted in each category
         if not head_vote or not chairman_vote:
@@ -279,6 +281,20 @@ def vote():
             )
             # Add one to the candidates number of votes
             senate_head_cand.votes_count += 1
+
+            # Query the db for the selected secretary candidate
+            secretary_cand = db.session.execute(
+                db.Select(Candidate).where(Candidate.id == secretary_vote)
+            ).scalar_one_or_none()
+            # Add the vote for the secretary candidate
+            db.session.add(
+                Vote(
+                    voter=user["id"],
+                    candidate_id=secretary_vote
+                )
+            )
+            # Add one to the candidate's number of votes
+            secretary_cand.votes_count += 1
 
             # Query the db for the selected chairman candidate
             senate_chairman_cand = db.session.execute(

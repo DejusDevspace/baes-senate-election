@@ -97,7 +97,7 @@
         throw new Error("Failed to fetch poll data");
       }
       const pollData = await response.json();
-      console.log(pollData);
+      // console.log(pollData);
       return pollData;
     } catch (error) {
       console.error("Error fetching poll data:", error);
@@ -138,16 +138,18 @@
       (candidate) => candidate.votes_count
     );
 
-    // Create Chart.js chart for Head Candidates
-    const headCtx = document.getElementById("chairmanChart").getContext("2d");
-    new Chart(headCtx, {
+    // Create Chart.js chart for Chairman Candidates
+    const chairmanCtx = document
+      .getElementById("chairmanChart")
+      .getContext("2d");
+    new Chart(chairmanCtx, {
       type: "bar",
       data: {
-        labels: headLabels,
+        labels: chairmanLabels,
         datasets: [
           {
             label: "Votes for Chairman Candidate(s)",
-            data: headVotes,
+            data: chairmanVotes,
             backgroundColor: "rgba(75, 192, 192, 0.6)",
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,
@@ -195,16 +197,16 @@
       },
     });
 
-    // Create Chart.js chart for Chairman Candidates
-    const chairmanCtx = document.getElementById("headChart").getContext("2d");
-    new Chart(chairmanCtx, {
+    // Create Chart.js chart for Head Candidates
+    const headCtx = document.getElementById("headChart").getContext("2d");
+    new Chart(headCtx, {
       type: "bar",
       data: {
-        labels: chairmanLabels,
+        labels: headLabels,
         datasets: [
           {
             label: "Votes for Head Candidate(s)",
-            data: chairmanVotes,
+            data: headVotes,
             backgroundColor: "rgba(153, 102, 255, 0.6)",
             borderColor: "rgba(153, 102, 255, 1)",
             borderWidth: 1,
