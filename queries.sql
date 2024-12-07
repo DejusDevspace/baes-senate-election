@@ -41,12 +41,11 @@ VALUES (500, 'BU20MCT1017', 'Adejo', 1234, 'Mechatronics Engineering'),
 
 INSERT INTO candidates (name, position, level, department, image)
 VALUES
-('John Doe', 'Chairman', 200, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png'),
-('Mary Doe', 'Head', 500, 'Mechatronics Engineering', 'assets/img/candidates/image526.png'),
-('Jack Harry', 'Chairman', 500, 'Mechatronics Engineering', 'assets/img/candidates/image524.png'),
-('Blake James', 'Chairman', 300, 'Mechatronics Engineering', 'assets/img/candidates/image525.png'),
-('Invalid Dan', 'Chairman', 300, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png'),
-('Jane Glory', 'Chairman', 400, 'Electrical and Electronics Engineering', 'assets/img/candidates/image526.png'),
-('Mark Doe', 'Head', 500, 'Electrical and Electronics Engineering', 'assets/img/candidates/image525.png'),
-('Paul Doe', 'Chairman', 400, 'Mechatronics Engineering', 'assets/img/candidates/image524.png'),
-('John Doe', 'Chairman', 200, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png');
+('John Doe', 'Head', 200, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png'),
+('Mary Doe', 'Chairman', 500, 'Mechatronics Engineering', 'assets/img/candidates/image526.png'),
+('Jack Harry', 'Head', 500, 'Mechatronics Engineering', 'assets/img/candidates/image524.png'),
+('Blake James', 'Head', 300, 'Mechatronics Engineering', 'assets/img/candidates/image525.png'),
+('Invalid Dan', 'Head', 300, 'Electrical and Electronics Engineering', 'assets/img/candidates/image524.png'),
+('Jane Glory', 'Head', 400, 'Electrical and Electronics Engineering', 'assets/img/candidates/image526.png'),
+('Mark Doe', 'Chairman', 500, 'Electrical and Electronics Engineering', 'assets/img/candidates/image525.png'),
+('Paul Doe', 'Head', 400, 'Mechatronics Engineering', 'assets/img/candidates/image524.png');

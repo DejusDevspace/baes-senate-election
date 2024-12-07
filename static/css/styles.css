@@ -47,8 +47,7 @@ main {
 }
 
 .container {
-    margin-bottom: 48px;
-    
+    margin-bottom: 36px;
 }
 
 #imageCarousel {
@@ -153,6 +152,7 @@ i {
 
 #head, #chairman {
     margin: 18px 0;
+    font-family: 'Rosmatika', sans-serif;
 }
 
 .copyright {

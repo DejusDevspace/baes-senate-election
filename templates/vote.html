@@ -14,35 +14,9 @@
       <div class="row justify-content-center">
         <!-- Head Candidates -->
         <div class="mb-4 text-center" id="head">
-          <h1><b>Senate Head</b></h1>
-        </div>
-        {% for candidate in head_candidates %}
-        <div class="col-md-3 candidate-card">
-          <img
-            src="{{ url_for('static', filename=candidate.image) }}"
-            alt="Candidate {{ candidate.id }}"
-          />
-          <label>{{ candidate.name }}</label>
-          <p>
-            {{ "MCT" if candidate.department == "Mechatronics Engineering" else
-            "EEE" }}, {{ candidate.level }} Level
-          </p>
-          <input
-            type="checkbox"
-            name="head_candidate"
-            value="{{ candidate.id }}"
-            onclick="toggleSelection(this, 'head_candidate')"
-            required
-          />
-          <p>Vote</p>
-        </div>
-        {% endfor %}
-
-        <!-- Chairman Candidates -->
-        <div class="mb-4 text-center" id="chairman">
           <h1><b>Senate Chairman</b></h1>
         </div>
-        {% for candidate in chairman_candidates %}
+        {% for candidate in head_candidates %}
         <div class="col-md-3 candidate-card">
           <img
             src="{{ url_for('static', filename=candidate.image) }}"
@@ -58,6 +32,32 @@
             name="chairman_candidate"
             value="{{ candidate.id }}"
             onclick="toggleSelection(this, 'chairman_candidate')"
+            required
+          />
+          <p>Vote</p>
+        </div>
+        {% endfor %}
+
+        <!-- Chairman Candidates -->
+        <div class="mb-4 text-center" id="chairman">
+          <h1><b>Senate Head</b></h1>
+        </div>
+        {% for candidate in chairman_candidates %}
+        <div class="col-md-3 candidate-card">
+          <img
+            src="{{ url_for('static', filename=candidate.image) }}"
+            alt="Candidate {{ candidate.id }}"
+          />
+          <label>{{ candidate.name }}</label>
+          <p>
+            {{ "MCT" if candidate.department == "Mechatronics Engineering" else
+            "EEE" }}, {{ candidate.level }} Level
+          </p>
+          <input
+            type="checkbox"
+            name="head_candidate"
+            value="{{ candidate.id }}"
+            onclick="toggleSelection(this, 'head_candidate')"
             required
           />
           <p>Vote</p>

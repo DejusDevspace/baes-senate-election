@@ -226,14 +226,14 @@ def vote():
     # Query candidates from the db
     # Head Candidates
     head_candidates = db.session.execute(
-        db.Select(Candidate).where(Candidate.position == "Head")
+        db.Select(Candidate).where(Candidate.position == "Chairman")
     ).scalars().all()
 
     # Chairman Candidates
     chairman_candidates = db.session.execute(
         db.Select(Candidate).where(
             and_(
-                Candidate.position == "Chairman",
+                Candidate.position == "Head",
                 Candidate.department == user["department"],
                 Candidate.level == user["level"],
             )
@@ -245,8 +245,8 @@ def vote():
         # Get the responses from the form
         head_vote = request.form.get("head_candidate")
         chairman_vote = request.form.get("chairman_candidate")
-        print("Head choice:", head_vote)
-        print("Chairman choice:", chairman_vote)
+        # print("Head choice:", head_vote)
+        # print("Chairman choice:", chairman_vote)
 
         # Verify that user has voted in each category
         if not head_vote or not chairman_vote:
@@ -309,4 +309,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
