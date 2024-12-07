@@ -31,8 +31,11 @@ document
     const chairmanSelected = document.querySelector(
       'input[name="chairman_candidate"]:checked'
     );
+    const secretarySelected = document.querySelector(
+      'input[name="secretary_candidate"]:checked'
+    );
 
-    if (!headSelected || !chairmanSelected) {
+    if (!headSelected || !chairmanSelected || !secretarySelected) {
       // Show an alert if the user hasn't selected all required options
       alert("Please select a candidate from each position before submitting.");
     } else {

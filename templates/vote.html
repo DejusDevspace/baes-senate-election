@@ -38,6 +38,32 @@
         </div>
         {% endfor %}
 
+        <!-- Assistant General Secretary Candidates -->
+        <div class="mb-4 text-center" id="head">
+          <h1><b>Assistant General Secretary</b></h1>
+        </div>
+        {% for candidate in secretary_candidates %}
+        <div class="col-md-3 candidate-card">
+          <img
+            src="{{ url_for('static', filename=candidate.image) }}"
+            alt="Candidate {{ candidate.id }}"
+          />
+          <label>{{ candidate.name }}</label>
+          <p>
+            {{ "MCT" if candidate.department == "Mechatronics Engineering" else
+            "EEE" }}, {{ candidate.level }} Level
+          </p>
+          <input
+            type="checkbox"
+            name="secretary_candidate"
+            value="{{ candidate.id }}"
+            onclick="toggleSelection(this, 'secretary_candidate')"
+            required
+          />
+          <p>Vote</p>
+        </div>
+        {% endfor %}
+
         <!-- Chairman Candidates -->
         <div class="mb-4 text-center" id="chairman">
           <h1><b>Senate Head</b></h1>

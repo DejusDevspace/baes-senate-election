@@ -132,11 +132,15 @@ def load_poll_data():
                     )
                 )
             ).scalars().all()
+            secretary_candidates = db.session.execute(
+                db.Select(Candidate).where(Candidate.position == "Secretary")
+            ).scalars().all()
             head_candidates = jsonify_data(head_candidates)
             chairman_candidates = jsonify_data(chairman_candidates)
+            secretary_candidates = jsonify_data(secretary_candidates)
 
             # print(head_candidates, "\n", chairman_candidates)
-            return head_candidates, chairman_candidates
+            return head_candidates, chairman_candidates, secretary_candidates
         except Exception as e:
             print(e)
     else:
@@ -146,12 +150,13 @@ def load_poll_data():
 @app.route("/", methods=["GET"])
 def home():
     if current_user.is_authenticated:
-        head_candidates, chairman_candidates = load_poll_data()
+        head_candidates, chairman_candidates, secretary_candidates = load_poll_data()
         render_template(
             "index.html",
             logged_in=current_user.is_authenticated,
             head_candidates=head_candidates,
-            chairman_candidates=chairman_candidates
+            chairman_candidates=chairman_candidates,
+            secretary_candidates=secretary_candidates
         )
     return render_template("index.html", logged_in=current_user.is_authenticated)
 
@@ -159,10 +164,11 @@ def home():
 @app.route("/poll-data", methods=["GET"])
 def poll_data():
     try:
-        head_candidates, chairman_candidates = load_poll_data()
+        head_candidates, chairman_candidates, secretary_candidates = load_poll_data()
         return jsonify({
             "head_candidates": head_candidates,
-            "chairman_candidates": chairman_candidates
+            "chairman_candidates": chairman_candidates,
+            "secretary_candidates": secretary_candidates
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -227,6 +233,11 @@ def vote():
     # Head Candidates
     head_candidates = db.session.execute(
         db.Select(Candidate).where(Candidate.position == "Chairman")
+    ).scalars().all()
+
+    # Assistant General Secretary Candidates
+    secretary_candidates = db.session.execute(
+        db.Select(Candidate).where(Candidate.position == "Secretary")
     ).scalars().all()
 
     # Chairman Candidates
@@ -299,6 +310,7 @@ def vote():
         logged_in=current_user.is_authenticated,
         head_candidates=head_candidates,
         chairman_candidates=chairman_candidates,
+        secretary_candidates=secretary_candidates,
     )
 
 @app.route("/logout", methods=["GET"])
