@@ -1,12 +1,14 @@
 {% extends "base.html" %} {% block title %}BAES{% endblock %} {% block content
 %}
 
-<div class="container image-container">
-  <img
-    src="{{ url_for('static', filename='assets/img/voted.png') }}"
-    alt="response-recorded"
-    class="fullscreen-image"
-  />
+<div class="image-container">
+  <div>
+    <img
+      src="{{ url_for('static', filename='assets/img/voted.png') }}"
+      alt="response-recorded"
+      class="fullscreen-image"
+    />
+  </div>
   <div class="mb-4 text-center">
     <p>
       Your response has been recorded! You can view the
