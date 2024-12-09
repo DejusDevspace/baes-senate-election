@@ -2,19 +2,22 @@
 %}
 
 <div class="image-container">
-  <div class="row">
-    <img
-      src="{{ url_for('static', filename='assets/img/thanksforvoting.png') }}"
-      alt="thanks-for-voting"
-      class="fullscreen-image"
-    />
+  <div class="container image-container">
+    <div>
+      <img
+        src="{{ url_for('static', filename='assets/img/thanksforvoting.png') }}"
+        alt="thanks-for-voting"
+        class="fullscreen-image"
+      />
+    </div>
+    <div class="mb-4 text-center">
+      <p>
+        Your response has been recorded! You can view the
+        <a href="{{ url_for('home') }}">Live Poll</a> while the election
+        concludes
+      </p>
+    </div>
   </div>
-  <div class="mb-4 text-center row">
-    <p>
-      Your response has been recorded! You can view the
-      <a href="{{ url_for('home') }}">Live Poll</a> while the election concludes
-    </p>
-  </div>
-</div>
 
-{% endblock %}
+  {% endblock %}
+</div>
