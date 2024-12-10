@@ -1,14 +1,14 @@
-from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, Response
+from flask import Flask, render_template, url_for, flash, redirect, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import Integer, String, ForeignKey, and_
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 import os
-from io import BytesIO
 from dotenv import load_dotenv
 from typing import List, Any, Dict
+import json
 # Forms from forms.py
 from forms import LoginForm, VoteForm
 
@@ -54,7 +54,7 @@ class Student(UserMixin, db.Model):
     matric_no: Mapped[str] = mapped_column(String(11), unique=True, nullable=False)
     department: Mapped[str] = mapped_column(String(50), nullable=False)
     surname: Mapped[str] = mapped_column(String(50), nullable=False)
-    pin: Mapped[int] = mapped_column(Integer, nullable=False)
+    pin: Mapped[int] = mapped_column(String(255), nullable=False)
     # Relationship with Votes
     votes = relationship("Vote", back_populates="student", cascade="all, delete-orphan")
 
@@ -68,7 +68,7 @@ class Candidate(db.Model):
     level: Mapped[str] = mapped_column(Integer, nullable=False)
     department: Mapped[str] = mapped_column(String(50), nullable=False)
     image: Mapped[str] = mapped_column(String(255), nullable=False)
-    votes_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    votes_count: Mapped[int] = mapped_column(Integer, default=0)
     # Relationship with Votes
     votes = relationship("Vote", back_populates="candidate", cascade="all, delete-orphan")
 
@@ -97,14 +97,7 @@ class User(UserMixin):
         self.pin = pin
 
 # with app.app_context():
-#     db.create_all()
-
-# Function to upload data of registered students into the db
-def load_database(sheet: BytesIO) -> None:
-    # TODO: Receive excel file containing data
-    # TODO: Hash and salt pin of registering users before passing into db
-    # TODO: Save data into the db
-    pass
+    # db.create_all()
 
 def jsonify_data(data: List[Any]) -> List[Dict]:
     json_data = []
@@ -192,7 +185,7 @@ def login():
                 flash("Matric no. '{}' not registered!".format(matric_no))
                 return redirect(url_for("login"))
             # Check if the pin entered by the student is correct
-            elif not pin == student.pin:
+            elif not check_password_hash(student.pin, pin):
                 # print(student.pin, pin)
                 flash("Incorrect pin! Please try again.")
                 return redirect(url_for("login"))
