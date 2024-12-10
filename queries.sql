@@ -6,7 +6,7 @@ CREATE TABLE students (
     matric_no VARCHAR(20) NOT NULL,
     department VARCHAR(50) NOT NULL,
     surname VARCHAR(50) NOT NULL,
-    pin VARCHAR(4) NOT NULL
+    pin VARCHAR(255) NOT NULL
 );
 
 -- TABLE FOR CANDIDATES' DETAILS
