@@ -26,7 +26,11 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Custom
 .idea/
+candidate_data.json
+baes-senate-election-registration.xlsx
+.~lock.baes-senate-election-registration.xlsx#
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
