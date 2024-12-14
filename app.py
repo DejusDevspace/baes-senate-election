@@ -265,9 +265,9 @@ def vote():
         # print("Secretary choice", secretary_vote)
 
         # Verify that user has voted in each category
-        if not head_vote or not chairman_vote:
-            flash("Please select a candidate in each category!", "warning")
-            return redirect(url_for("vote"))
+        # if not head_vote or not chairman_vote:
+        #     flash("Please select a candidate in each category!", "warning")
+        #     return redirect(url_for("vote"))
 
         # Save votes to database
         try:
