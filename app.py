@@ -8,6 +8,7 @@ from werkzeug.security import check_password_hash
 import os
 from dotenv import load_dotenv
 from typing import List, Any, Dict
+from datetime import datetime
 import json
 # Forms from forms.py
 from forms import LoginForm, VoteForm
@@ -45,6 +46,8 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
+# Time voting ends
+VOTING_ENDTIME = datetime(2024, 12, 14, 7, 0, 0)
 
 # Table for students participating election
 class Student(UserMixin, db.Model):
@@ -213,6 +216,16 @@ def login():
 @app.route("/vote", methods=["GET", "POST"])
 @login_required
 def vote():
+    if datetime.now() >= VOTING_ENDTIME:
+        # Generate the link to the live poll
+        live_poll_link = url_for('home', _external=True)
+        # Embed the link in the message
+        message = (
+            f'Voting time has passed, you can no longer cast your vote! '
+            f'You can visit the live poll instead: {live_poll_link}'
+        )
+        return jsonify({"error": message}), 403
+
     form = VoteForm()
     user = {
         "id": current_user.id,
