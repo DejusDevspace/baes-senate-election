@@ -260,9 +260,9 @@ def vote():
         head_vote = request.form.get("head_candidate")
         chairman_vote = request.form.get("chairman_candidate")
         secretary_vote = request.form.get("secretary_candidate")
-        # print("Head choice:", head_vote)
-        # print("Chairman choice:", chairman_vote)
-        # print("Secretary choice", secretary_vote)
+        print("Head choice:", head_vote)
+        print("Chairman choice:", chairman_vote)
+        print("Secretary choice", secretary_vote)
 
         # Verify that user has voted in each category
         # if not head_vote or not chairman_vote:
@@ -271,47 +271,50 @@ def vote():
 
         # Save votes to database
         try:
-            # Query the db for the selected head candidate
-            senate_head_cand = db.session.execute(
-                db.Select(Candidate).where(Candidate.id == head_vote)
-            ).scalar_one_or_none()
-            # Add the vote for the senate head
-            db.session.add(
-                Vote(
-                    voter=user["id"],
-                    candidate_id=head_vote
+            if head_vote:
+                # Query the db for the selected head candidate
+                senate_head_cand = db.session.execute(
+                    db.Select(Candidate).where(Candidate.id == head_vote)
+                ).scalar_one_or_none()
+                # Add the vote for the senate head
+                db.session.add(
+                    Vote(
+                        voter=user["id"],
+                        candidate_id=head_vote
+                    )
                 )
-            )
-            # Add one to the candidates number of votes
-            senate_head_cand.votes_count += 1
+                # Add one to the candidates number of votes
+                senate_head_cand.votes_count += 1
 
-            # Query the db for the selected secretary candidate
-            secretary_cand = db.session.execute(
-                db.Select(Candidate).where(Candidate.id == secretary_vote)
-            ).scalar_one_or_none()
-            # Add the vote for the secretary candidate
-            db.session.add(
-                Vote(
-                    voter=user["id"],
-                    candidate_id=secretary_vote
+            if secretary_vote:
+                # Query the db for the selected secretary candidate
+                secretary_cand = db.session.execute(
+                    db.Select(Candidate).where(Candidate.id == secretary_vote)
+                ).scalar_one_or_none()
+                # Add the vote for the secretary candidate
+                db.session.add(
+                    Vote(
+                        voter=user["id"],
+                        candidate_id=secretary_vote
+                    )
                 )
-            )
-            # Add one to the candidate's number of votes
-            secretary_cand.votes_count += 1
+                # Add one to the candidate's number of votes
+                secretary_cand.votes_count += 1
 
-            # Query the db for the selected chairman candidate
-            senate_chairman_cand = db.session.execute(
-                db.Select(Candidate).where(Candidate.id == chairman_vote)
-            ).scalar_one_or_none()
-            # Add the vote for the senate chairman
-            db.session.add(
-                Vote(
-                    voter=user["id"],
-                    candidate_id=chairman_vote
+            if chairman_vote:
+                # Query the db for the selected chairman candidate
+                senate_chairman_cand = db.session.execute(
+                    db.Select(Candidate).where(Candidate.id == chairman_vote)
+                ).scalar_one_or_none()
+                # Add the vote for the senate chairman
+                db.session.add(
+                    Vote(
+                        voter=user["id"],
+                        candidate_id=chairman_vote
+                    )
                 )
-            )
-            # Add one to the candidates number of votes
-            senate_chairman_cand.votes_count += 1
+                # Add one to the candidates number of votes
+                senate_chairman_cand.votes_count += 1
 
             # Commit the transaction
             db.session.commit()
