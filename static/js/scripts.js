@@ -35,9 +35,11 @@ document
       'input[name="secretary_candidate"]:checked'
     );
 
-    if (!headSelected || !chairmanSelected || !secretarySelected) {
+    if (!headSelected && !chairmanSelected && !secretarySelected) {
       // Show an alert if the user hasn't selected all required options
-      alert("Please select a candidate from each position before submitting.");
+      alert(
+        "Please select a candidate from at least one position before submitting."
+      );
     } else {
       // If both are selected, show the confirmation modal
       const confirmationModal = new bootstrap.Modal(

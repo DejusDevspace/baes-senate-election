@@ -142,17 +142,27 @@ def load_poll_data():
 
 @app.route("/", methods=["GET"])
 def home():
-    if current_user.is_authenticated:
-        head_candidates, chairman_candidates, secretary_candidates = load_poll_data()
-        render_template(
-            "index.html",
-            logged_in=current_user.is_authenticated,
-            head_candidates=head_candidates,
-            chairman_candidates=chairman_candidates,
-            secretary_candidates=secretary_candidates
-        )
-    return render_template("index.html", logged_in=current_user.is_authenticated)
-
+    # if current_user.is_authenticated:
+    #     head_candidates, chairman_candidates, secretary_candidates = load_poll_data()
+    #     voters = db.session.execute(
+    #         db.Select(Student)
+    #     ).scalars().all()
+    #     render_template(
+    #         "index.html",
+    #         logged_in=current_user.is_authenticated,
+    #         head_candidates=head_candidates,
+    #         chairman_candidates=chairman_candidates,
+    #         secretary_candidates=secretary_candidates,
+    #         total_voters=len(voters)
+    #     )
+    voters = db.session.execute(db.Select(Student)).scalars().all()
+    # print(voters)
+    # print(len(voters))
+    return render_template(
+        "index.html",
+        logged_in=current_user.is_authenticated,
+        total_voters=len(voters)
+    )
 
 @app.route("/poll-data", methods=["GET"])
 def poll_data():
