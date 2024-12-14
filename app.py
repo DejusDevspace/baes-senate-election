@@ -47,7 +47,7 @@ db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 # Time voting ends
-VOTING_ENDTIME = datetime(2024, 12, 14, 21, 0, 0)
+VOTING_ENDTIME = datetime(2024, 12, 14, 21, 15, 0)
 
 # Table for students participating election
 class Student(UserMixin, db.Model):
